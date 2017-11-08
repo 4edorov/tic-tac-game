@@ -1,15 +1,17 @@
 <template>
-  <!-- Don't drop "q-app" class -->
   <div id="q-app">
-    <router-view />
+    <Layout />
   </div>
 </template>
 
 <script>
-/*
- * Root component
- */
-export default {}
+import Layout from './components/Layout'
+
+export default {
+  components: {
+    Layout
+  }
+}
 </script>
 
 <style></style>
