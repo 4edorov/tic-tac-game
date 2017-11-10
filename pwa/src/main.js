@@ -23,7 +23,8 @@ import Quasar, {
   QItem,
   QItemSide,
   QItemMain,
-  QCollapsible
+  QCollapsible,
+  QRadio
 } from 'quasar'
 
 Vue.config.productionTip = false
@@ -39,7 +40,8 @@ Vue.use(Quasar, {
     QItem,
     QItemSide,
     QItemMain,
-    QCollapsible
+    QCollapsible,
+    QRadio
   }
 }) // Install Quasar Framework
 
