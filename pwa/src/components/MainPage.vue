@@ -1,6 +1,6 @@
 <template>
   <div class="layout-padding">
-    <div class='substrate shadow-7'>
+    <div class='substrate shadow-8'>
       <table class='q-table cell-separator loose board'>
         <tbody>
           <tr>
@@ -21,10 +21,15 @@
         </tbody>
       </table>
     </div>
-    <div class='panel'>
-      <q-collapsible icon="settings" label="Settings" class='bg-info'>
+    <div class='panel shadow-8'>
+      <q-collapsible icon="settings" label="Settings" class='bg-cyan'>
         <div>
-          Content
+          <p class='caption'>Number of players</p>
+          <q-radio v-model='numberOfPlayers' val='1' label='1 player' />
+          <q-radio v-model='numberOfPlayers' val='0' label='2 players' />
+          <p class='caption'>Noughts or crosses</p>
+          <q-radio v-model='firstPlayer' val='0' label='Os' />
+          <q-radio v-model='firstPlayer' val='1' label='Xs' />
         </div>
       </q-collapsible>
     </div>
@@ -34,7 +39,10 @@
 <script>
 export default {
   data () {
-    return {}
+    return {
+      firstPlayer: '0',
+      numberOfPlayers: '1'
+    }
   }
 }
 </script>
