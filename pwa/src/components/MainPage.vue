@@ -1,6 +1,28 @@
 <template>
-  <div class="layout-padding">
-    <div class='substrate shadow-8'>
+  <div class='layout-padding'>
+    <div class='up-panel'>
+      <q-card inline>
+        <q-item>
+          <q-item-side avatar='../statics/player_1.png' />
+          <q-item-main>
+            <q-item-tile label>Player 1</q-item-tile>
+          </q-item-main>
+          <q-list>
+          </q-list>
+        </q-item>
+      </q-card>
+      <q-card inline>
+        <q-item>
+          <q-item-side avatar='../statics/player_1.png' />
+          <q-item-main>
+            <q-item-tile label>Player 1</q-item-tile>
+          </q-item-main>
+          <q-list>
+          </q-list>
+        </q-item>
+      </q-card>
+    </div>
+    <div class='substrate shadow-7'>
       <table class='q-table cell-separator loose board'>
         <tbody>
           <tr>
@@ -21,8 +43,8 @@
         </tbody>
       </table>
     </div>
-    <div class='panel shadow-8'>
-      <q-collapsible icon="settings" label="Settings" class='bg-cyan'>
+    <div class='down-panel shadow-8'>
+      <q-collapsible icon="settings" label="Settings" class='bg-info'>
         <div>
           <p class='caption'>Number of players</p>
           <q-radio v-model='numberOfPlayers' val='1' label='1 player' />
@@ -64,7 +86,14 @@ export default {
   margin-left 25px
   display inline-table
 
-.panel
+.up-panel
+  width 350px
+  margin auto
+  margin-bottom 35px
+  display flex
+  justify-content space-between
+
+.down-panel
   width 350px
   margin auto
   margin-top 35px

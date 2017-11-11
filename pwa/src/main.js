@@ -20,11 +20,13 @@ import Quasar, {
   QIcon,
   QList,
   QListHeader,
+  QCard,
   QItem,
   QItemSide,
   QItemMain,
-  QCollapsible,
-  QRadio
+  QItemTile,
+  QRadio,
+  QCollapsible
 } from 'quasar'
 
 Vue.config.productionTip = false
@@ -37,11 +39,13 @@ Vue.use(Quasar, {
     QIcon,
     QList,
     QListHeader,
+    QCard,
     QItem,
     QItemSide,
     QItemMain,
-    QCollapsible,
-    QRadio
+    QItemTile,
+    QRadio,
+    QCollapsible
   }
 }) // Install Quasar Framework
 
