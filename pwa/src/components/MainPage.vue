@@ -1,7 +1,7 @@
 <template>
   <div class='layout-padding'>
     <div class='up-panel'>
-      <q-card inline color='green'>
+      <q-card inline :color='firstIsActive ? "green" : "red"'>
         <q-item>
           <q-item-side avatar='../statics/player_1.png' />
           <q-item-main>
@@ -11,13 +11,16 @@
         <q-list>
           <q-item>
             <q-item-side>
-              <q-item-tile color='tertiary' icon='casino' />
+              <q-card-media>
+                <img src='../statics/nought.png' />
+              </q-card-media>
+              <!-- <q-item-tile color='tertiary' icon='casino' /> -->
             </q-item-side>
             <q-item-main label>Score: {{ firstScore }}</q-item-main>
           </q-item>
         </q-list>
       </q-card>
-      <q-card inline color='red'>
+      <q-card inline :color='firstIsActive ? "red" : "green"'>
         <q-item>
           <q-item-side :avatar='avatarPath' />
           <q-item-main>
@@ -38,23 +41,37 @@
       <table class='q-table cell-separator loose board'>
         <tbody>
           <tr>
-            <td @click='pushSquare($event)'>
-              <img class='figure' src='../statics/cross.png' />
+            <td id='0' @click='pushSquare($event)'>
+              <img id='0' class='figure' v-if='state[0].isActive' :src='state[0].figureSource' />
             </td>
-            <td>
-              <img class='figure' src='../statics/nought.png' />
+            <td id='1' @click='pushSquare($event)'>
+              <img id='1' class='figure' v-if='state[1].isActive' :src='state[1].figureSource' />
             </td>
-            <td></td>
+            <td id='2' @click='pushSquare($event)'>
+              <img id='2' class='figure' v-if='state[2].isActive' :src='state[2].figureSource' />
+            </td>
           </tr>
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td id='3' @click='pushSquare($event)'>
+              <img id='3' class='figure' v-if='state[3].isActive' :src='state[3].figureSource' />
+            </td>
+            <td id='4' @click='pushSquare($event)'>
+              <img id='4' class='figure' v-if='state[4].isActive' :src='state[4].figureSource' />
+            </td>
+            <td id='5' @click='pushSquare($event)'>
+              <img id='5' class='figure' v-if='state[5].isActive' :src='state[5].figureSource' />
+            </td>
           </tr>
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td id='6' @click='pushSquare($event)'>
+              <img id='6' class='figure' v-if='state[6].isActive' :src='state[6].figureSource' />
+            </td>
+            <td id='7' @click='pushSquare($event)'>
+              <img id='7' class='figure' v-if='state[7].isActive' :src='state[7].figureSource' />
+            </td>
+            <td id='8' @click='pushSquare($event)'>
+              <img id='8' class='figure' v-if='state[8].isActive' :src='state[8].figureSource' />
+            </td>
           </tr>
         </tbody>
       </table>
@@ -79,9 +96,48 @@ export default {
   data () {
     return {
       firstPlayer: '0',
-      numberOfPlayers: '1',
+      numberOfPlayers: '0',
       firstScore: 0,
-      secondScore: 0
+      secondScore: 0,
+      state: {
+        0: {
+          isActive: false,
+          figureSource: ''
+        },
+        1: {
+          isActive: false,
+          figureSource: ''
+        },
+        2: {
+          isActive: false,
+          figureSource: ''
+        },
+        3: {
+          isActive: false,
+          figureSource: ''
+        },
+        4: {
+          isActive: false,
+          figureSource: ''
+        },
+        5: {
+          isActive: false,
+          figureSource: ''
+        },
+        6: {
+          isActive: false,
+          figureSource: ''
+        },
+        7: {
+          isActive: false,
+          figureSource: ''
+        },
+        8: {
+          isActive: false,
+          figureSource: ''
+        }
+      },
+      firstIsActive: true
     }
   },
   computed: {
@@ -94,7 +150,11 @@ export default {
   },
   methods: {
     pushSquare (event) {
-      console.log('event', event)
+      if (!this.state[event.target.id].isActive) {
+        this.state[event.target.id].isActive = !this.state[event.target.id].isActive
+        this.state[event.target.id].figureSource = this.firstPlayer === '0' && this.firstIsActive ? '../statics/nought.png' : '../statics/cross.png'
+        this.firstIsActive = !this.firstIsActive
+      }
     }
   }
 }
