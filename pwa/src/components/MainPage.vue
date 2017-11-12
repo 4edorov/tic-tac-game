@@ -1,33 +1,49 @@
 <template>
   <div class='layout-padding'>
     <div class='up-panel'>
-      <q-card inline>
+      <q-card inline color='green'>
         <q-item>
           <q-item-side avatar='../statics/player_1.png' />
           <q-item-main>
             <q-item-tile label>Player 1</q-item-tile>
           </q-item-main>
-          <q-list>
-          </q-list>
         </q-item>
+        <q-list>
+          <q-item>
+            <q-item-side>
+              <q-item-tile color='tertiary' icon='casino' />
+            </q-item-side>
+            <q-item-main label>Score: {{ firstScore }}</q-item-main>
+          </q-item>
+        </q-list>
       </q-card>
-      <q-card inline>
+      <q-card inline color='red'>
         <q-item>
-          <q-item-side avatar='../statics/player_1.png' />
+          <q-item-side :avatar='avatarPath' />
           <q-item-main>
-            <q-item-tile label>Player 1</q-item-tile>
+            <q-item-tile label>{{ secondPlayerName }}</q-item-tile>
           </q-item-main>
-          <q-list>
-          </q-list>
         </q-item>
+        <q-list>
+          <q-item>
+            <q-item-side>
+              <q-item-tile color='tertiary' icon='casino' />
+            </q-item-side>
+            <q-item-main label>Score: {{ secondScore }}</q-item-main>
+          </q-item>
+        </q-list>
       </q-card>
     </div>
     <div class='substrate shadow-7'>
       <table class='q-table cell-separator loose board'>
         <tbody>
           <tr>
-            <td></td>
-            <td></td>
+            <td @click='pushSquare($event)'>
+              <img class='figure' src='../statics/cross.png' />
+            </td>
+            <td>
+              <img class='figure' src='../statics/nought.png' />
+            </td>
             <td></td>
           </tr>
           <tr>
@@ -63,7 +79,22 @@ export default {
   data () {
     return {
       firstPlayer: '0',
-      numberOfPlayers: '1'
+      numberOfPlayers: '1',
+      firstScore: 0,
+      secondScore: 0
+    }
+  },
+  computed: {
+    secondPlayerName: function () {
+      return parseInt(this.numberOfPlayers, 10) ? 'Computer' : 'Player 2'
+    },
+    avatarPath: function () {
+      return parseInt(this.numberOfPlayers, 10) ? '../statics/computer.png' : '../statics/player_2.png'
+    }
+  },
+  methods: {
+    pushSquare (event) {
+      console.log('event', event)
     }
   }
 }
@@ -78,6 +109,10 @@ export default {
   margin auto
   background-color $tertiary
 
+td
+  width 100px
+  height 100px
+
 .board
   width 300px
   height 300px
@@ -86,15 +121,19 @@ export default {
   margin-left 25px
   display inline-table
 
+.figure
+  display block
+  width 100%
+
 .up-panel
   width 350px
   margin auto
-  margin-bottom 35px
+  margin-bottom 20px
   display flex
   justify-content space-between
 
 .down-panel
   width 350px
   margin auto
-  margin-top 35px
+  margin-top 20px
 </style>
