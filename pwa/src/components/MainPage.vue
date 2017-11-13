@@ -1,7 +1,7 @@
 <template>
   <div class='layout-padding'>
     <div class='up-panel'>
-      <q-card inline :color='firstIsActive ? "green" : "red"'>
+      <q-card inline class='shadow-7' :color='firstIsActive ? "green" : "red"'>
         <q-item>
           <q-item-side avatar='../statics/player_1.png' />
           <q-item-main>
@@ -11,16 +11,13 @@
         <q-list>
           <q-item>
             <q-item-side>
-              <q-card-media>
-                <img src='../statics/nought.png' />
-              </q-card-media>
-              <!-- <q-item-tile color='tertiary' icon='casino' /> -->
+              <img class='player-figure' :src='getFirstFigure' />
             </q-item-side>
             <q-item-main label>Score: {{ firstScore }}</q-item-main>
           </q-item>
         </q-list>
       </q-card>
-      <q-card inline :color='firstIsActive ? "red" : "green"'>
+      <q-card inline class='shadow-7' :color='firstIsActive ? "red" : "green"'>
         <q-item>
           <q-item-side :avatar='avatarPath' />
           <q-item-main>
@@ -30,7 +27,7 @@
         <q-list>
           <q-item>
             <q-item-side>
-              <q-item-tile color='tertiary' icon='casino' />
+              <img class='player-figure' :src='getSecondFigure' />
             </q-item-side>
             <q-item-main label>Score: {{ secondScore }}</q-item-main>
           </q-item>
@@ -92,6 +89,8 @@
 </template>
 
 <script>
+import vars from '../libs/libs'
+
 export default {
   data () {
     return {
@@ -99,45 +98,10 @@ export default {
       numberOfPlayers: '0',
       firstScore: 0,
       secondScore: 0,
-      state: {
-        0: {
-          isActive: false,
-          figureSource: ''
-        },
-        1: {
-          isActive: false,
-          figureSource: ''
-        },
-        2: {
-          isActive: false,
-          figureSource: ''
-        },
-        3: {
-          isActive: false,
-          figureSource: ''
-        },
-        4: {
-          isActive: false,
-          figureSource: ''
-        },
-        5: {
-          isActive: false,
-          figureSource: ''
-        },
-        6: {
-          isActive: false,
-          figureSource: ''
-        },
-        7: {
-          isActive: false,
-          figureSource: ''
-        },
-        8: {
-          isActive: false,
-          figureSource: ''
-        }
-      },
-      firstIsActive: true
+      state: vars.initialState,
+      firstIsActive: true,
+      noughtArray: [],
+      crossArray: []
     }
   },
   computed: {
@@ -146,14 +110,51 @@ export default {
     },
     avatarPath: function () {
       return parseInt(this.numberOfPlayers, 10) ? '../statics/computer.png' : '../statics/player_2.png'
+    },
+    getFirstFigure: function () {
+      return this.firstPlayer === '0' ? '../statics/nought.png' : '../statics/cross.png'
+    },
+    getSecondFigure: function () {
+      return this.firstPlayer === '0' ? '../statics/cross.png' : '../statics/nought.png'
     }
   },
   methods: {
     pushSquare (event) {
       if (!this.state[event.target.id].isActive) {
         this.state[event.target.id].isActive = !this.state[event.target.id].isActive
-        this.state[event.target.id].figureSource = this.firstPlayer === '0' && this.firstIsActive ? '../statics/nought.png' : '../statics/cross.png'
+        if ((this.firstPlayer === '0' && this.firstIsActive) || (this.firstPlayer === '1' && !this.firstIsActive)) {
+          this.state[event.target.id].figureSource = '../statics/nought.png'
+        }
+        if ((this.firstPlayer === '1' && this.firstIsActive) || (this.firstPlayer === '0' && !this.firstIsActive)) {
+          this.state[event.target.id].figureSource = '../statics/cross.png'
+        }
         this.firstIsActive = !this.firstIsActive
+
+        if (this.state[event.target.id].figureSource === '../statics/nought.png') {
+          this.noughtArray.push(parseInt(event.target.id, 10))
+        }
+        else {
+          this.crossArray.push(parseInt(event.target.id, 10))
+        }
+
+        for (let key in vars.winPositions) {
+          let noughts = 0
+          let crosses = 0
+          vars.winPositions[key].forEach(one => {
+            if (this.noughtArray.includes(one)) {
+              noughts++
+              if (noughts === 3) {
+                console.log('noughts win')
+              }
+            }
+            if (this.crossArray.includes(one)) {
+              crosses++
+              if (crosses === 3) {
+                console.log('crosses win')
+              }
+            }
+          })
+        }
       }
     }
   }
@@ -196,4 +197,8 @@ td
   width 350px
   margin auto
   margin-top 20px
+
+.player-figure
+  height 24px
+  width 24px
 </style>
