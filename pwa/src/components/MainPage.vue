@@ -1,5 +1,10 @@
 <template>
   <div class='layout-padding'>
+    <div class='up-row'>
+      <q-btn small class='reset-btn shadow-7' color='deep-orange' @click='resetGame()'>
+        <q-icon name='refresh' />
+      </q-btn>
+    </div>
     <div class='up-panel'>
       <q-card inline class='shadow-7' :color='firstIsActive ? "green" : "red"'>
         <q-item>
@@ -98,7 +103,7 @@ export default {
       numberOfPlayers: '0',
       firstScore: 0,
       secondScore: 0,
-      state: vars.initialState,
+      state: JSON.parse(JSON.stringify(vars.initialState)),
       firstIsActive: true,
       noughtArray: [],
       crossArray: []
@@ -156,6 +161,16 @@ export default {
           })
         }
       }
+    },
+    resetGame () {
+      this.firstPlayer = '0'
+      this.numberOfPlayers = '0'
+      this.firstScore = 0
+      this.secondScore = 0
+      this.state = JSON.parse(JSON.stringify(vars.initialState))
+      this.firstIsActive = true
+      this.noughtArray = []
+      this.crossArray = []
     }
   }
 }
@@ -189,9 +204,16 @@ td
 .up-panel
   width 350px
   margin auto
-  margin-bottom 20px
+  margin-bottom 12px
   display flex
   justify-content space-between
+
+.reset-btn
+  width 350px
+
+.up-row
+  text-align center
+  margin-bottom 12px
 
 .down-panel
   width 350px
