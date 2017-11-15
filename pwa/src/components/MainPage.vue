@@ -1,5 +1,10 @@
 <template>
   <div class='layout-padding'>
+    <div class='up-row'>
+      <q-btn small class='reset-btn shadow-7' color='deep-orange' @click='resetGame()'>
+        <q-icon name='refresh' />
+      </q-btn>
+    </div>
     <div class='up-panel'>
       <q-card inline class='shadow-7' :color='firstIsActive ? "green" : "red"'>
         <q-item>
@@ -90,6 +95,7 @@
 
 <script>
 import vars from '../libs/libs'
+import { Dialog } from 'quasar'
 
 export default {
   data () {
@@ -98,10 +104,11 @@ export default {
       numberOfPlayers: '0',
       firstScore: 0,
       secondScore: 0,
-      state: vars.initialState,
+      state: JSON.parse(JSON.stringify(vars.initialState)),
       firstIsActive: true,
       noughtArray: [],
-      crossArray: []
+      crossArray: [],
+      winMessage: ''
     }
   },
   computed: {
@@ -144,18 +151,62 @@ export default {
             if (this.noughtArray.includes(one)) {
               noughts++
               if (noughts === 3) {
-                console.log('noughts win')
+                if (this.firstPlayer === '0') {
+                  this.firstScore++
+                }
+                this.winMessage = 'Noughts are winner'
+                this.showRoundsActions()
               }
             }
             if (this.crossArray.includes(one)) {
               crosses++
               if (crosses === 3) {
-                console.log('crosses win')
+                if (this.firstPlayer === '0') {
+                  this.secondScore++
+                }
+                this.winMessage = 'Crosses are winner'
+                this.showRoundsActions()
               }
             }
           })
         }
       }
+    },
+    showRoundsActions () {
+      Dialog.create({
+        title: this.winMessage,
+        buttons: [
+          {
+            label: 'Reset Game',
+            color: 'negative',
+            handler: () => {
+              this.resetGame()
+            }
+          },
+          {
+            label: 'Keep Going',
+            color: 'positive',
+            handler: () => {
+              this.toNextRound()
+            }
+          }
+        ]
+      })
+    },
+    toNextRound () {
+      this.state = JSON.parse(JSON.stringify(vars.initialState))
+      this.noughtArray = []
+      this.crossArray = []
+    },
+    resetGame () {
+      this.firstPlayer = '0'
+      this.numberOfPlayers = '0'
+      this.firstScore = 0
+      this.secondScore = 0
+      this.state = JSON.parse(JSON.stringify(vars.initialState))
+      this.firstIsActive = true
+      this.noughtArray = []
+      this.crossArray = []
     }
   }
 }
@@ -189,9 +240,16 @@ td
 .up-panel
   width 350px
   margin auto
-  margin-bottom 20px
+  margin-bottom 12px
   display flex
   justify-content space-between
+
+.reset-btn
+  width 350px
+
+.up-row
+  text-align center
+  margin-bottom 12px
 
 .down-panel
   width 350px
