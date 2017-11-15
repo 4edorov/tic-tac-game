@@ -95,6 +95,7 @@
 
 <script>
 import vars from '../libs/libs'
+import { Dialog } from 'quasar'
 
 export default {
   data () {
@@ -106,7 +107,8 @@ export default {
       state: JSON.parse(JSON.stringify(vars.initialState)),
       firstIsActive: true,
       noughtArray: [],
-      crossArray: []
+      crossArray: [],
+      winMessage: ''
     }
   },
   computed: {
@@ -149,18 +151,52 @@ export default {
             if (this.noughtArray.includes(one)) {
               noughts++
               if (noughts === 3) {
-                console.log('noughts win')
+                if (this.firstPlayer === '0') {
+                  this.firstScore++
+                }
+                this.winMessage = 'Noughts are winner'
+                this.showRoundsActions()
               }
             }
             if (this.crossArray.includes(one)) {
               crosses++
               if (crosses === 3) {
-                console.log('crosses win')
+                if (this.firstPlayer === '0') {
+                  this.secondScore++
+                }
+                this.winMessage = 'Crosses are winner'
+                this.showRoundsActions()
               }
             }
           })
         }
       }
+    },
+    showRoundsActions () {
+      Dialog.create({
+        title: this.winMessage,
+        buttons: [
+          {
+            label: 'Reset Game',
+            color: 'negative',
+            handler: () => {
+              this.resetGame()
+            }
+          },
+          {
+            label: 'Keep Going',
+            color: 'positive',
+            handler: () => {
+              this.toNextRound()
+            }
+          }
+        ]
+      })
+    },
+    toNextRound () {
+      this.state = JSON.parse(JSON.stringify(vars.initialState))
+      this.noughtArray = []
+      this.crossArray = []
     },
     resetGame () {
       this.firstPlayer = '0'
