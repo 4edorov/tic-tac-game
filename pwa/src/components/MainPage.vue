@@ -100,7 +100,7 @@ import { Dialog } from 'quasar'
 export default {
   data () {
     return {
-      firstPlayer: '0',
+      firstPlayer: '1',
       numberOfPlayers: '0',
       firstScore: 0,
       secondScore: 0,
@@ -109,6 +109,13 @@ export default {
       noughtArray: [],
       crossArray: [],
       winMessage: ''
+    }
+  },
+  watch: {
+    firstPlayer: function () {
+      if (this.noughtArray.length === 0 && this.crossArray.length === 0) {
+        this.firstIsActive = this.firstPlayer === '1'
+      }
     }
   },
   computed: {
@@ -151,9 +158,8 @@ export default {
             if (this.noughtArray.includes(one)) {
               noughts++
               if (noughts === 3) {
-                if (this.firstPlayer === '0') {
-                  this.firstScore++
-                }
+                this.firstPlayer === '0' ? this.firstScore++ : this.secondScore++
+
                 this.winMessage = 'Noughts are winner'
                 this.showRoundsActions()
               }
@@ -161,9 +167,8 @@ export default {
             if (this.crossArray.includes(one)) {
               crosses++
               if (crosses === 3) {
-                if (this.firstPlayer === '0') {
-                  this.secondScore++
-                }
+                this.firstPlayer === '0' ? this.secondScore++ : this.firstScore++
+
                 this.winMessage = 'Crosses are winner'
                 this.showRoundsActions()
               }
@@ -197,9 +202,10 @@ export default {
       this.state = JSON.parse(JSON.stringify(vars.initialState))
       this.noughtArray = []
       this.crossArray = []
+      this.firstIsActive = this.firstPlayer === '1'
     },
     resetGame () {
-      this.firstPlayer = '0'
+      this.firstPlayer = '1'
       this.numberOfPlayers = '0'
       this.firstScore = 0
       this.secondScore = 0
