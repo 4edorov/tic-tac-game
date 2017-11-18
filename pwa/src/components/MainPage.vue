@@ -116,6 +116,14 @@ export default {
       if (this.noughtArray.length === 0 && this.crossArray.length === 0) {
         this.firstIsActive = this.firstPlayer === '1'
       }
+      if (this.numberOfPlayers === '1' && this.firstPlayer !== '1') {
+        this.autoPushSquare()
+      }
+    },
+    numberOfPlayers: function () {
+      if (this.numberOfPlayers === '1' && this.firstPlayer !== '1') {
+        this.autoPushSquare()
+      }
     }
   },
   computed: {
@@ -130,6 +138,11 @@ export default {
     },
     getSecondFigure: function () {
       return this.firstPlayer === '0' ? '../statics/cross.png' : '../statics/nought.png'
+    }
+  },
+  created () {
+    if (this.numberOfPlayers === '1' && this.firstPlayer !== '1') {
+      this.autoPushSquare()
     }
   },
   methods: {
@@ -213,6 +226,10 @@ export default {
       this.firstIsActive = true
       this.noughtArray = []
       this.crossArray = []
+    },
+    autoPushSquare () {
+      console.log('auto push')
+      this.pushSquare({target: {id: '1'}})
     }
   }
 }
