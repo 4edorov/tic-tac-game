@@ -108,7 +108,8 @@ export default {
       firstIsActive: true,
       noughtArray: [],
       crossArray: [],
-      winMessage: ''
+      winMessage: '',
+      autoStepsNumber: 0
     }
   },
   watch: {
@@ -188,6 +189,16 @@ export default {
             }
           })
         }
+
+        let sumSteps = this.crossArray.length + this.noughtArray.length
+        if (sumSteps === 9) {
+          this.winMessage = 'Draw!'
+          this.showRoundsActions()
+        }
+
+        if (this.numberOfPlayers === '1' && this.firstIsActive !== true) {
+          this.autoPushSquare()
+        }
       }
     },
     showRoundsActions () {
@@ -216,6 +227,7 @@ export default {
       this.noughtArray = []
       this.crossArray = []
       this.firstIsActive = this.firstPlayer === '1'
+      this.autoStepsNumber = 0
     },
     resetGame () {
       this.firstPlayer = '1'
@@ -226,10 +238,81 @@ export default {
       this.firstIsActive = true
       this.noughtArray = []
       this.crossArray = []
+      this.autoStepsNumber = 0
     },
     autoPushSquare () {
       console.log('auto push')
-      this.pushSquare({target: {id: '1'}})
+      const id = this.autoBrain()
+      this.pushSquare({target: {id}})
+    },
+    autoBrain () {
+      if (this.firstPlayer !== '1') {
+        if (this.autoStepsNumber === 0) {
+          this.autoStepsNumber++
+          return '4'
+        }
+        if (this.autoStepsNumber === 1) {
+          if (this.noughtArray[0] === 0) {
+            this.autoStepsNumber++
+            return '8'
+          }
+          if (this.noughtArray[0] === 2) {
+            this.autoStepsNumber++
+            return '6'
+          }
+          if (this.noughtArray[0] === 8) {
+            this.autoStepsNumber++
+            return '0'
+          }
+          if (this.noughtArray[0] === 6) {
+            this.autoStepsNumber++
+            return '2'
+          }
+          if (this.noughtArray[0] === 1) {
+            this.autoStepsNumber++
+            const variation = Math.round(Math.random())
+            const id = variation ? '6' : '8'
+            return id
+          }
+          if (this.noughtArray[0] === 5) {
+            this.autoStepsNumber++
+            const variation = Math.round(Math.random())
+            const id = variation ? '0' : '6'
+            return id
+          }
+          if (this.noughtArray[0] === 7) {
+            this.autoStepsNumber++
+            const variation = Math.round(Math.random())
+            const id = variation ? '0' : '2'
+            return id
+          }
+          if (this.noughtArray[0] === 3) {
+            this.autoStepsNumber++
+            const variation = Math.round(Math.random())
+            const id = variation ? '2' : '8'
+            return id
+          }
+        }
+        if (this.autoStepsNumber >= 2) {
+          let restSquares
+          for (let key in vars.winPositions) {
+            restSquares = vars.winPositions[key]
+            let findIndex
+            this.noughtArray.forEach(one => {
+              findIndex = restSquares.findIndex(winOne => {
+                return one === winOne
+              })
+              if (findIndex >= 0) {
+                restSquares.splice(findIndex, 1)
+              }
+            })
+            if (restSquares.length === 1) {
+              this.autoStepsNumber++
+              return restSquares[0].toString()
+            }
+          }
+        }
+      }
     }
   }
 }
