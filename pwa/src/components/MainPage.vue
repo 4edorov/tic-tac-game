@@ -231,6 +231,9 @@ export default {
       this.firstIsActive = this.firstPlayer === '1'
       this.autoStepsNumber = 0
       this.winMessage = ''
+      if (this.numberOfPlayers === '1' && this.firstPlayer !== '1') {
+        this.autoPushSquare()
+      }
     },
     resetGame () {
       this.firstPlayer = '1'
@@ -298,43 +301,47 @@ export default {
           }
         }
         if (this.autoStepsNumber >= 2) {
-          let restCrossSquares, restNoughtSquares
+          let restCrossSquares, restNoughtSquares, crossIndex, noughtIndex, promise
           for (let key in vars.winPositions) {
             restCrossSquares = restNoughtSquares = vars.winPositions[key]
 
-            let crossIndex
-            this.crossArray.forEach(one => {
-              crossIndex = restCrossSquares.findIndex(winOne => {
-                return one === winOne
+            promise = restCrossSquares => {
+              this.crossArray.forEach(one => {
+                crossIndex = restCrossSquares.findIndex(winOne => {
+                  return one === winOne
+                })
+                if (crossIndex >= 0) {
+                  restCrossSquares.splice(crossIndex, 1)
+                }
               })
-              if (crossIndex >= 0) {
-                restCrossSquares.splice(crossIndex, 1)
-              }
-            })
-            if (restCrossSquares.length === 1) {
-              const id = restCrossSquares[0].toString()
-              if (!this.state[id].isActive) {
-                this.autoStepsNumber++
-                return id
-              }
+              return Promise.resolve(restCrossSquares)
             }
 
-            let noughtIndex
-            this.noughtArray.forEach(one => {
-              noughtIndex = restNoughtSquares.findIndex(winOne => {
-                return one === winOne
+            promise.then(restCrosses => {
+              if (restCrosses.length === 1) {
+                const id = restCrossSquares[0].toString()
+                if (!this.state[id].isActive) {
+                  this.autoStepsNumber++
+                  return id
+                }
+              }
+
+              this.noughtArray.forEach(one => {
+                noughtIndex = restNoughtSquares.findIndex(winOne => {
+                  return one === winOne
+                })
+                if (noughtIndex >= 0) {
+                  restNoughtSquares.splice(noughtIndex, 1)
+                }
               })
-              if (noughtIndex >= 0) {
-                restNoughtSquares.splice(noughtIndex, 1)
+              if (restNoughtSquares.length === 1) {
+                const id = restNoughtSquares[0].toString()
+                if (!this.state[id].isActive) {
+                  this.autoStepsNumber++
+                  return id
+                }
               }
             })
-            if (restNoughtSquares.length === 1) {
-              const id = restNoughtSquares[0].toString()
-              if (!this.state[id].isActive) {
-                this.autoStepsNumber++
-                return id
-              }
-            }
           }
         }
       }
