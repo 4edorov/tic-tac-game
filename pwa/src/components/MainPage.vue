@@ -156,7 +156,6 @@ export default {
         if ((this.firstPlayer === '1' && this.firstIsActive) || (this.firstPlayer === '0' && !this.firstIsActive)) {
           this.state[event.target.id].figureSource = '../statics/cross.png'
         }
-        this.firstIsActive = !this.firstIsActive
 
         if (this.state[event.target.id].figureSource === '../statics/nought.png') {
           this.noughtArray.push(parseInt(event.target.id, 10))
@@ -167,34 +166,43 @@ export default {
 
         for (let key in vars.winPositions) {
           let noughts = 0
-          let crosses = 0
           vars.winPositions[key].forEach(one => {
             if (this.noughtArray.includes(one)) {
               noughts++
               if (noughts === 3) {
                 this.firstPlayer === '0' ? this.firstScore++ : this.secondScore++
 
-                this.winMessage = 'Noughts are winner'
-                this.showRoundsActions()
-              }
-            }
-            if (this.crossArray.includes(one)) {
-              crosses++
-              if (crosses === 3) {
-                this.firstPlayer === '0' ? this.secondScore++ : this.firstScore++
-
-                this.winMessage = 'Crosses are winner'
+                this.winMessage = 'Noughts are winner!'
                 this.showRoundsActions()
               }
             }
           })
         }
 
-        let sumSteps = this.crossArray.length + this.noughtArray.length
-        if (sumSteps === 9) {
-          this.winMessage = 'Draw!'
-          this.showRoundsActions()
+        for (let key in vars.winPositions) {
+          let crosses = 0
+          vars.winPositions[key].forEach(one => {
+            if (this.crossArray.includes(one)) {
+              crosses++
+              if (crosses === 3) {
+                this.firstPlayer === '0' ? this.secondScore++ : this.firstScore++
+
+                this.winMessage = 'Crosses are winner!'
+                this.showRoundsActions()
+              }
+            }
+          })
         }
+
+        if (!this.winMessage) {
+          let sumSteps = this.crossArray.length + this.noughtArray.length
+          if (sumSteps === 9) {
+            this.winMessage = 'Draw!'
+            this.showRoundsActions()
+          }
+        }
+
+        this.firstIsActive = !this.firstIsActive
 
         if (this.numberOfPlayers === '1' && this.firstIsActive !== true) {
           this.autoPushSquare()
@@ -228,6 +236,10 @@ export default {
       this.crossArray = []
       this.firstIsActive = this.firstPlayer === '1'
       this.autoStepsNumber = 0
+      this.winMessage = ''
+      if (this.numberOfPlayers === '1' && this.firstPlayer !== '1') {
+        this.autoPushSquare()
+      }
     },
     resetGame () {
       this.firstPlayer = '1'
@@ -239,9 +251,9 @@ export default {
       this.noughtArray = []
       this.crossArray = []
       this.autoStepsNumber = 0
+      this.winMessage = ''
     },
     autoPushSquare () {
-      console.log('auto push')
       const id = this.autoBrain()
       this.pushSquare({target: {id}})
     },
@@ -294,21 +306,42 @@ export default {
           }
         }
         if (this.autoStepsNumber >= 2) {
-          let restSquares
+          let restCrossSquares, restNoughtSquares, crossIndex, noughtIndex
           for (let key in vars.winPositions) {
-            restSquares = vars.winPositions[key]
-            let findIndex
-            this.noughtArray.forEach(one => {
-              findIndex = restSquares.findIndex(winOne => {
+            restCrossSquares = vars.winPositions[key]
+            this.crossArray.forEach(one => {
+              crossIndex = restCrossSquares.findIndex(winOne => {
                 return one === winOne
               })
-              if (findIndex >= 0) {
-                restSquares.splice(findIndex, 1)
+              if (crossIndex >= 0) {
+                restCrossSquares.splice(crossIndex, 1)
               }
             })
-            if (restSquares.length === 1) {
-              this.autoStepsNumber++
-              return restSquares[0].toString()
+            if (restCrossSquares.length === 1) {
+              const id = restCrossSquares[0].toString()
+              if (!this.state[id].isActive) {
+                this.autoStepsNumber++
+                return id
+              }
+            }
+          }
+
+          for (let key in vars.winPositions) {
+            restNoughtSquares = vars.winPositions[key]
+            this.noughtArray.forEach(one => {
+              noughtIndex = restNoughtSquares.findIndex(winOne => {
+                return one === winOne
+              })
+              if (noughtIndex >= 0) {
+                restNoughtSquares.splice(noughtIndex, 1)
+              }
+            })
+            if (restNoughtSquares.length === 1) {
+              const id = restNoughtSquares[0].toString()
+              if (!this.state[id].isActive) {
+                this.autoStepsNumber++
+                return id
+              }
             }
           }
         }
