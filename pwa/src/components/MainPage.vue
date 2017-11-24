@@ -165,21 +165,6 @@ export default {
         }
 
         for (let key in vars.winPositions) {
-          let noughts = 0
-          vars.winPositions[key].forEach(one => {
-            if (this.noughtArray.includes(one)) {
-              noughts++
-              if (noughts === 3) {
-                this.firstPlayer === '0' ? this.firstScore++ : this.secondScore++
-
-                this.winMessage = 'Noughts are winner!'
-                this.showRoundsActions()
-              }
-            }
-          })
-        }
-
-        for (let key in vars.winPositions) {
           let crosses = 0
           vars.winPositions[key].forEach(one => {
             if (this.crossArray.includes(one)) {
@@ -188,6 +173,21 @@ export default {
                 this.firstPlayer === '0' ? this.secondScore++ : this.firstScore++
 
                 this.winMessage = 'Crosses are winner!'
+                this.showRoundsActions()
+              }
+            }
+          })
+        }
+
+        for (let key in vars.winPositions) {
+          let noughts = 0
+          vars.winPositions[key].forEach(one => {
+            if (this.noughtArray.includes(one)) {
+              noughts++
+              if (noughts === 3) {
+                this.firstPlayer === '0' ? this.firstScore++ : this.secondScore++
+
+                this.winMessage = 'Noughts are winner!'
                 this.showRoundsActions()
               }
             }
@@ -255,7 +255,9 @@ export default {
     },
     autoPushSquare () {
       const id = this.autoBrain()
-      this.pushSquare({target: {id}})
+      setTimeout(() => {
+        this.pushSquare({target: {id}})
+      }, 500)
     },
     autoBrain () {
       if (this.firstPlayer !== '1') {
@@ -308,7 +310,7 @@ export default {
         if (this.autoStepsNumber >= 2) {
           let restCrossSquares, restNoughtSquares, crossIndex, noughtIndex
           for (let key in vars.winPositions) {
-            restCrossSquares = vars.winPositions[key]
+            restCrossSquares = JSON.parse(JSON.stringify(vars.winPositions[key]))
             this.crossArray.forEach(one => {
               crossIndex = restCrossSquares.findIndex(winOne => {
                 return one === winOne
@@ -327,7 +329,7 @@ export default {
           }
 
           for (let key in vars.winPositions) {
-            restNoughtSquares = vars.winPositions[key]
+            restNoughtSquares = JSON.parse(JSON.stringify(vars.winPositions[key]))
             this.noughtArray.forEach(one => {
               noughtIndex = restNoughtSquares.findIndex(winOne => {
                 return one === winOne
