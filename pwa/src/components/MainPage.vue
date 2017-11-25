@@ -109,7 +109,8 @@ export default {
       noughtArray: [],
       crossArray: [],
       winMessage: '',
-      autoStepsNumber: 0
+      autoStepsNumber: 0,
+      prevStep: null
     }
   },
   watch: {
@@ -148,6 +149,8 @@ export default {
   },
   methods: {
     pushSquare (event) {
+      this.prevStep = event.target.id
+
       if (!this.state[event.target.id].isActive) {
         this.state[event.target.id].isActive = !this.state[event.target.id].isActive
         if ((this.firstPlayer === '0' && this.firstIsActive) || (this.firstPlayer === '1' && !this.firstIsActive)) {
@@ -310,7 +313,7 @@ export default {
         if (this.autoStepsNumber >= 2) {
           let restCrossSquares, restNoughtSquares, crossIndex, noughtIndex
           for (let key in vars.winPositions) {
-            restCrossSquares = JSON.parse(JSON.stringify(vars.winPositions[key]))
+            restCrossSquares = vars.winPositions[key].slice()
             this.crossArray.forEach(one => {
               crossIndex = restCrossSquares.findIndex(winOne => {
                 return one === winOne
@@ -329,7 +332,7 @@ export default {
           }
 
           for (let key in vars.winPositions) {
-            restNoughtSquares = JSON.parse(JSON.stringify(vars.winPositions[key]))
+            restNoughtSquares = vars.winPositions[key].slice()
             this.noughtArray.forEach(one => {
               noughtIndex = restNoughtSquares.findIndex(winOne => {
                 return one === winOne
@@ -347,7 +350,25 @@ export default {
             }
           }
         }
+        console.log('far', this.getFarStepsArray(this.prevStep), this.prevStep)
+        return (this.getFarStepsArray(this.prevStep)[1] || this.getFarStepsArray(this.prevStep)[0]).id
       }
+    },
+    getFarStepsArray (point) {
+      let distancesArray = Object.keys(this.state).map(key => {
+        if (!this.state[key].isActive) {
+          return {dist: this.getDistance(point, key), id: key}
+        }
+      }).filter(one => one)
+      distancesArray = distancesArray.sort((one, two) => two.dist - one.dist)
+      return distancesArray
+    },
+    getDistance (point1, point2) {
+      const pointCoordinates1 = vars.coordinatesTable[point1]
+      const pointCoordinates2 = vars.coordinatesTable[point2]
+      console.log(pointCoordinates1, pointCoordinates2)
+      const distance = Math.sqrt(Math.pow(pointCoordinates1[1] - pointCoordinates1[0], 2) + Math.pow(pointCoordinates2[1] - pointCoordinates2[0], 2))
+      return distance
     }
   }
 }

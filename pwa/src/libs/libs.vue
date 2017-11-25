@@ -49,8 +49,21 @@ const winPositions = {
   7: [0, 4, 8]
 }
 
+const coordinatesTable = {
+  0: [1, 1],
+  1: [2, 1],
+  2: [3, 1],
+  3: [1, 2],
+  4: [2, 2],
+  5: [3, 2],
+  6: [1, 3],
+  7: [2, 3],
+  8: [3, 3]
+}
+
 module.exports = {
   initialState,
-  winPositions
+  winPositions,
+  coordinatesTable
 }
 </script>
