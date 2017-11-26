@@ -101,7 +101,7 @@ export default {
   data () {
     return {
       firstPlayer: '1',
-      numberOfPlayers: '0',
+      numberOfPlayers: '1',
       firstScore: 0,
       secondScore: 0,
       state: JSON.parse(JSON.stringify(vars.initialState)),
@@ -110,7 +110,8 @@ export default {
       crossArray: [],
       winMessage: '',
       autoStepsNumber: 0,
-      prevStep: null
+      prevStep: null,
+      autoNoughtStrategy: null
     }
   },
   watch: {
@@ -207,7 +208,7 @@ export default {
 
         this.firstIsActive = !this.firstIsActive
 
-        if (this.numberOfPlayers === '1' && this.firstIsActive !== true) {
+        if (this.numberOfPlayers === '1' && this.firstIsActive !== true && !this.winMessage) {
           this.autoPushSquare()
         }
       }
@@ -240,6 +241,7 @@ export default {
       this.firstIsActive = this.firstPlayer === '1'
       this.autoStepsNumber = 0
       this.winMessage = ''
+      this.autoNoughtStrategy = null
       if (this.numberOfPlayers === '1' && this.firstPlayer !== '1') {
         this.autoPushSquare()
       }
@@ -255,15 +257,17 @@ export default {
       this.crossArray = []
       this.autoStepsNumber = 0
       this.winMessage = ''
+      this.autoNoughtStrategy = null
     },
     autoPushSquare () {
       const id = this.autoBrain()
+      console.log('id', id)
       setTimeout(() => {
         this.pushSquare({target: {id}})
       }, 500)
     },
     autoBrain () {
-      if (this.firstPlayer !== '1') {
+      if (this.firstPlayer === '0') {
         if (this.autoStepsNumber === 0) {
           this.autoStepsNumber++
           return '4'
@@ -312,6 +316,7 @@ export default {
         }
         if (this.autoStepsNumber >= 2) {
           let restCrossSquares, restNoughtSquares, crossIndex, noughtIndex
+
           for (let key in vars.winPositions) {
             restCrossSquares = vars.winPositions[key].slice()
             this.crossArray.forEach(one => {
@@ -350,8 +355,102 @@ export default {
             }
           }
         }
-        console.log('far', this.getFarStepsArray(this.prevStep), this.prevStep)
+
         return (this.getFarStepsArray(this.prevStep)[1] || this.getFarStepsArray(this.prevStep)[0]).id
+      }
+      else {
+        if (this.autoStepsNumber >= 0) {
+          let restCrossSquares, restNoughtSquares, crossIndex, noughtIndex
+
+          for (let key in vars.winPositions) {
+            restNoughtSquares = vars.winPositions[key].slice()
+            this.noughtArray.forEach(one => {
+              noughtIndex = restNoughtSquares.findIndex(winOne => {
+                return one === winOne
+              })
+              if (noughtIndex >= 0) {
+                restNoughtSquares.splice(noughtIndex, 1)
+              }
+            })
+            if (restNoughtSquares.length === 1) {
+              const id = restNoughtSquares[0].toString()
+              if (!this.state[id].isActive) {
+                this.autoStepsNumber++
+                return id
+              }
+            }
+          }
+
+          for (let key in vars.winPositions) {
+            restCrossSquares = vars.winPositions[key].slice()
+            this.crossArray.forEach(one => {
+              crossIndex = restCrossSquares.findIndex(winOne => {
+                return one === winOne
+              })
+              if (crossIndex >= 0) {
+                restCrossSquares.splice(crossIndex, 1)
+              }
+            })
+            if (restCrossSquares.length === 1) {
+              const id = restCrossSquares[0].toString()
+              if (!this.state[id].isActive) {
+                this.autoStepsNumber++
+                return id
+              }
+            }
+          }
+        }
+
+        if (this.autoStepsNumber === 0) {
+          if (this.prevStep === '4') {
+            this.autoNoughtStrategy = 'center'
+            this.autoStepsNumber++
+
+            return this.getNoughtSquareForCenter()
+          }
+
+          if (this.prevStep === '0' || this.prevStep === '2' || this.prevStep === '6' || this.prevStep === '8') {
+            this.autoNoughtStrategy = 'corner'
+            this.autoStepsNumber++
+
+            return '4'
+          }
+        }
+        if (this.autoNoughtStrategy === 'center') {
+          return this.getNoughtSquareForCenter() || Object.keys(this.state).find(key => !this.state[key].isActive)
+        }
+        if (this.autoNoughtStrategy === 'corner') {
+          if (this.crossArray[0] === 0 || this.crossArray[0] === 8) {
+            this.autoStepsNumber++
+            const variation = Math.round(Math.random())
+            const id = variation ? '2' : '6'
+            return id
+          }
+          if (this.crossArray[0] === 2 || this.crossArray[0] === 6) {
+            this.autoStepsNumber++
+            const variation = Math.round(Math.random())
+            const id = variation ? '0' : '8'
+            return id
+          }
+        }
+      }
+    },
+    getNoughtSquareForCenter () {
+      const variation = Math.random()
+      if ((variation <= 0.25) && !this.state[0].isActive) {
+        return '0'
+      }
+      else if ((variation <= 0.5) && !this.state[2].isActive) {
+        return '2'
+      }
+      else if ((variation <= 0.75) && !this.state[6].isActive) {
+        return '6'
+      }
+      else if ((variation <= 1) && !this.state[8].isActive) {
+        return '8'
+      }
+      else {
+        return false
       }
     },
     getFarStepsArray (point) {
@@ -366,7 +465,6 @@ export default {
     getDistance (point1, point2) {
       const pointCoordinates1 = vars.coordinatesTable[point1]
       const pointCoordinates2 = vars.coordinatesTable[point2]
-      console.log(pointCoordinates1, pointCoordinates2)
       const distance = Math.sqrt(Math.pow(pointCoordinates1[1] - pointCoordinates1[0], 2) + Math.pow(pointCoordinates2[1] - pointCoordinates2[0], 2))
       return distance
     }
