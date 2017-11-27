@@ -416,22 +416,33 @@ export default {
             return '4'
           }
         }
+
         if (this.autoNoughtStrategy === 'center') {
+          this.autoStepsNumber++
           return this.getNoughtSquareForCenter() || Object.keys(this.state).find(key => !this.state[key].isActive)
         }
-        if (this.autoNoughtStrategy === 'corner') {
+
+        if (this.autoNoughtStrategy === 'corner' && this.autoStepsNumber === 1) {
           if (this.crossArray[0] === 0 || this.crossArray[0] === 8) {
             this.autoStepsNumber++
             const variation = Math.round(Math.random())
-            const id = variation ? '2' : '6'
+            let steps = ['2', '6']
+            variation || steps.reverse()
+            const id = steps.find(step => !this.state[parseInt(step, 10)].isActive)
             return id
           }
           if (this.crossArray[0] === 2 || this.crossArray[0] === 6) {
             this.autoStepsNumber++
             const variation = Math.round(Math.random())
-            const id = variation ? '0' : '8'
+            let steps = ['0', '8']
+            variation || steps.reverse()
+            const id = steps.find(step => !this.state[parseInt(step, 10)].isActive)
             return id
           }
+        }
+
+        if (this.autoNoughtStrategy === 'corner' && this.autoStepsNumber >= 1) {
+          return Object.keys(this.state).find(key => !this.state[key].isActive)
         }
       }
     },
