@@ -415,6 +415,13 @@ export default {
 
             return '4'
           }
+
+          if (this.prevStep === '1' || this.prevStep === '3' || this.prevStep === '5' || this.prevStep === '7') {
+            this.autoNoughtStrategy = 'side'
+            this.autoStepsNumber++
+
+            return '4'
+          }
         }
 
         if (this.autoNoughtStrategy === 'center') {
@@ -441,7 +448,31 @@ export default {
           }
         }
 
+        if (this.autoNoughtStrategy === 'side' && this.autoStepsNumber === 1) {
+          if (this.prevStep === '0') {
+            this.autoStepsNumber++
+            return '8'
+          }
+          if (this.prevStep === '2') {
+            this.autoStepsNumber++
+            return '6'
+          }
+          if (this.prevStep === '6') {
+            this.autoStepsNumber++
+            return '2'
+          }
+          if (this.prevStep === '8') {
+            this.autoStepsNumber++
+            return '0'
+          }
+          if (this.prevStep === '1' || this.prevStep === '3' || this.prevStep === '5' || this.prevStep === '7') {
+            this.autoStepsNumber++
+            return Object.keys(this.state).find(key => !this.state[key].isActive)
+          }
+        }
+
         if (this.autoNoughtStrategy === 'corner' && this.autoStepsNumber >= 1) {
+          this.autoStepsNumber++
           return Object.keys(this.state).find(key => !this.state[key].isActive)
         }
       }
