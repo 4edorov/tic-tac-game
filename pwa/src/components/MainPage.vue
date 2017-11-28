@@ -261,7 +261,7 @@ export default {
     },
     autoPushSquare () {
       const id = this.autoBrain()
-      console.log('id', id)
+      this.autoStepsNumber++
       setTimeout(() => {
         this.pushSquare({target: {id}})
       }, 500)
@@ -269,46 +269,37 @@ export default {
     autoBrain () {
       if (this.firstPlayer === '0') {
         if (this.autoStepsNumber === 0) {
-          this.autoStepsNumber++
           return '4'
         }
         if (this.autoStepsNumber === 1) {
           if (this.noughtArray[0] === 0) {
-            this.autoStepsNumber++
             return '8'
           }
           if (this.noughtArray[0] === 2) {
-            this.autoStepsNumber++
             return '6'
           }
           if (this.noughtArray[0] === 8) {
-            this.autoStepsNumber++
             return '0'
           }
           if (this.noughtArray[0] === 6) {
-            this.autoStepsNumber++
             return '2'
           }
           if (this.noughtArray[0] === 1) {
-            this.autoStepsNumber++
             const variation = Math.round(Math.random())
             const id = variation ? '6' : '8'
             return id
           }
           if (this.noughtArray[0] === 5) {
-            this.autoStepsNumber++
             const variation = Math.round(Math.random())
             const id = variation ? '0' : '6'
             return id
           }
           if (this.noughtArray[0] === 7) {
-            this.autoStepsNumber++
             const variation = Math.round(Math.random())
             const id = variation ? '0' : '2'
             return id
           }
           if (this.noughtArray[0] === 3) {
-            this.autoStepsNumber++
             const variation = Math.round(Math.random())
             const id = variation ? '2' : '8'
             return id
@@ -330,7 +321,6 @@ export default {
             if (restCrossSquares.length === 1) {
               const id = restCrossSquares[0].toString()
               if (!this.state[id].isActive) {
-                this.autoStepsNumber++
                 return id
               }
             }
@@ -349,7 +339,6 @@ export default {
             if (restNoughtSquares.length === 1) {
               const id = restNoughtSquares[0].toString()
               if (!this.state[id].isActive) {
-                this.autoStepsNumber++
                 return id
               }
             }
@@ -375,7 +364,6 @@ export default {
             if (restNoughtSquares.length === 1) {
               const id = restNoughtSquares[0].toString()
               if (!this.state[id].isActive) {
-                this.autoStepsNumber++
                 return id
               }
             }
@@ -394,7 +382,6 @@ export default {
             if (restCrossSquares.length === 1) {
               const id = restCrossSquares[0].toString()
               if (!this.state[id].isActive) {
-                this.autoStepsNumber++
                 return id
               }
             }
@@ -404,34 +391,26 @@ export default {
         if (this.autoStepsNumber === 0) {
           if (this.prevStep === '4') {
             this.autoNoughtStrategy = 'center'
-            this.autoStepsNumber++
-
             return this.getNoughtSquareForCenter()
           }
 
           if (this.prevStep === '0' || this.prevStep === '2' || this.prevStep === '6' || this.prevStep === '8') {
             this.autoNoughtStrategy = 'corner'
-            this.autoStepsNumber++
-
             return '4'
           }
 
           if (this.prevStep === '1' || this.prevStep === '3' || this.prevStep === '5' || this.prevStep === '7') {
             this.autoNoughtStrategy = 'side'
-            this.autoStepsNumber++
-
             return '4'
           }
         }
 
         if (this.autoNoughtStrategy === 'center') {
-          this.autoStepsNumber++
           return this.getNoughtSquareForCenter() || Object.keys(this.state).find(key => !this.state[key].isActive)
         }
 
         if (this.autoNoughtStrategy === 'corner' && this.autoStepsNumber === 1) {
           if (this.crossArray[0] === 0 || this.crossArray[0] === 8) {
-            this.autoStepsNumber++
             const variation = Math.round(Math.random())
             let steps = ['2', '6']
             variation || steps.reverse()
@@ -439,7 +418,6 @@ export default {
             return id
           }
           if (this.crossArray[0] === 2 || this.crossArray[0] === 6) {
-            this.autoStepsNumber++
             const variation = Math.round(Math.random())
             let steps = ['0', '8']
             variation || steps.reverse()
@@ -450,85 +428,68 @@ export default {
 
         if (this.autoNoughtStrategy === 'side' && this.autoStepsNumber === 1) {
           if (this.prevStep === '0') {
-            this.autoStepsNumber++
             return '8'
           }
           if (this.prevStep === '2') {
-            this.autoStepsNumber++
             return '6'
           }
           if (this.prevStep === '6') {
-            this.autoStepsNumber++
             return '2'
           }
           if (this.prevStep === '8') {
-            this.autoStepsNumber++
             return '0'
           }
 
           if (this.prevStep === '1') {
             if (this.crossArray[0] === 7) {
-              this.autoStepsNumber++
               return Object.keys(this.state).find(key => !this.state[key].isActive)
             }
             if (this.crossArray[0] === 3) {
-              this.autoStepsNumber++
               return '0'
             }
             if (this.crossArray[0] === 5) {
-              this.autoStepsNumber++
               return '2'
             }
           }
 
           if (this.prevStep === '3') {
             if (this.crossArray[0] === 5) {
-              this.autoStepsNumber++
               return Object.keys(this.state).find(key => !this.state[key].isActive)
             }
             if (this.crossArray[0] === 1) {
-              this.autoStepsNumber++
               return '0'
             }
             if (this.crossArray[0] === 7) {
-              this.autoStepsNumber++
               return '6'
             }
           }
 
           if (this.prevStep === '5') {
             if (this.crossArray[0] === 3) {
-              this.autoStepsNumber++
               return Object.keys(this.state).find(key => !this.state[key].isActive)
             }
             if (this.crossArray[0] === 1) {
-              this.autoStepsNumber++
               return '2'
             }
             if (this.crossArray[0] === 7) {
-              this.autoStepsNumber++
               return '8'
             }
           }
 
           if (this.prevStep === '7') {
             if (this.crossArray[0] === 1) {
-              this.autoStepsNumber++
               return Object.keys(this.state).find(key => !this.state[key].isActive)
             }
             if (this.crossArray[0] === 3) {
-              this.autoStepsNumber++
               return '6'
             }
             if (this.crossArray[0] === 5) {
-              this.autoStepsNumber++
               return '8'
             }
           }
         }
 
         if ((this.autoNoughtStrategy === 'corner' || this.autoNoughtStrategy === 'side') && this.autoStepsNumber >= 1) {
-          this.autoStepsNumber++
           return Object.keys(this.state).find(key => !this.state[key].isActive)
         }
       }
