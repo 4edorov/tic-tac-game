@@ -465,13 +465,69 @@ export default {
             this.autoStepsNumber++
             return '0'
           }
-          if (this.prevStep === '1' || this.prevStep === '3' || this.prevStep === '5' || this.prevStep === '7') {
-            this.autoStepsNumber++
-            return Object.keys(this.state).find(key => !this.state[key].isActive)
+
+          if (this.prevStep === '1') {
+            if (this.crossArray[0] === 7) {
+              this.autoStepsNumber++
+              return Object.keys(this.state).find(key => !this.state[key].isActive)
+            }
+            if (this.crossArray[0] === 3) {
+              this.autoStepsNumber++
+              return '0'
+            }
+            if (this.crossArray[0] === 5) {
+              this.autoStepsNumber++
+              return '2'
+            }
+          }
+
+          if (this.prevStep === '3') {
+            if (this.crossArray[0] === 5) {
+              this.autoStepsNumber++
+              return Object.keys(this.state).find(key => !this.state[key].isActive)
+            }
+            if (this.crossArray[0] === 1) {
+              this.autoStepsNumber++
+              return '0'
+            }
+            if (this.crossArray[0] === 7) {
+              this.autoStepsNumber++
+              return '6'
+            }
+          }
+
+          if (this.prevStep === '5') {
+            if (this.crossArray[0] === 3) {
+              this.autoStepsNumber++
+              return Object.keys(this.state).find(key => !this.state[key].isActive)
+            }
+            if (this.crossArray[0] === 1) {
+              this.autoStepsNumber++
+              return '2'
+            }
+            if (this.crossArray[0] === 7) {
+              this.autoStepsNumber++
+              return '8'
+            }
+          }
+
+          if (this.prevStep === '7') {
+            if (this.crossArray[0] === 1) {
+              this.autoStepsNumber++
+              return Object.keys(this.state).find(key => !this.state[key].isActive)
+            }
+            if (this.crossArray[0] === 3) {
+              this.autoStepsNumber++
+              return '6'
+            }
+            if (this.crossArray[0] === 5) {
+              this.autoStepsNumber++
+              return '8'
+            }
           }
         }
 
-        if (this.autoNoughtStrategy === 'corner' && this.autoStepsNumber >= 1) {
+        if ((this.autoNoughtStrategy === 'corner' || this.autoNoughtStrategy === 'side') && this.autoStepsNumber >= 1) {
           this.autoStepsNumber++
           return Object.keys(this.state).find(key => !this.state[key].isActive)
         }
