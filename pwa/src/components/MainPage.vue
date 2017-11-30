@@ -8,7 +8,7 @@
     <div class='up-panel'>
       <q-card inline class='shadow-7' :color='firstIsActive ? "green" : "red"'>
         <q-item>
-          <q-item-side avatar='../statics/player_1.png' />
+          <q-item-side avatar='statics/player_1.png' />
           <q-item-main>
             <q-item-tile label>Player 1</q-item-tile>
           </q-item-main>
@@ -40,7 +40,7 @@
       </q-card>
     </div>
     <div class='substrate shadow-7'>
-      <table class='q-table cell-separator loose board'>
+      <table class='q-table loose board'>
         <tbody>
           <tr>
             <td id='0' @click='pushSquare($event)'>
@@ -134,13 +134,13 @@ export default {
       return parseInt(this.numberOfPlayers, 10) ? 'Computer' : 'Player 2'
     },
     avatarPath: function () {
-      return parseInt(this.numberOfPlayers, 10) ? '../statics/computer.png' : '../statics/player_2.png'
+      return parseInt(this.numberOfPlayers, 10) ? 'statics/computer.png' : 'statics/player_2.png'
     },
     getFirstFigure: function () {
-      return this.firstPlayer === '0' ? '../statics/nought.png' : '../statics/cross.png'
+      return this.firstPlayer === '0' ? 'statics/nought.png' : 'statics/cross.png'
     },
     getSecondFigure: function () {
-      return this.firstPlayer === '0' ? '../statics/cross.png' : '../statics/nought.png'
+      return this.firstPlayer === '0' ? 'statics/cross.png' : 'statics/nought.png'
     }
   },
   created () {
@@ -155,13 +155,13 @@ export default {
       if (!this.state[event.target.id].isActive) {
         this.state[event.target.id].isActive = !this.state[event.target.id].isActive
         if ((this.firstPlayer === '0' && this.firstIsActive) || (this.firstPlayer === '1' && !this.firstIsActive)) {
-          this.state[event.target.id].figureSource = '../statics/nought.png'
+          this.state[event.target.id].figureSource = 'statics/nought.png'
         }
         if ((this.firstPlayer === '1' && this.firstIsActive) || (this.firstPlayer === '0' && !this.firstIsActive)) {
-          this.state[event.target.id].figureSource = '../statics/cross.png'
+          this.state[event.target.id].figureSource = 'statics/cross.png'
         }
 
-        if (this.state[event.target.id].figureSource === '../statics/nought.png') {
+        if (this.state[event.target.id].figureSource === 'statics/nought.png') {
           this.noughtArray.push(parseInt(event.target.id, 10))
         }
         else {
@@ -543,6 +543,7 @@ export default {
 td
   width 100px
   height 100px
+  border 1px solid #555
 
 .board
   width 300px
