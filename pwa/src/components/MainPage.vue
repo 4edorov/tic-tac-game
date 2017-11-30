@@ -40,7 +40,7 @@
       </q-card>
     </div>
     <div class='substrate shadow-7'>
-      <table class='q-table cell-separator loose board'>
+      <table class='q-table loose board'>
         <tbody>
           <tr>
             <td id='0' @click='pushSquare($event)'>
@@ -543,6 +543,7 @@ export default {
 td
   width 100px
   height 100px
+  border 1px solid #555
 
 .board
   width 300px
